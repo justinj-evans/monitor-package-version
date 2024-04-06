@@ -1,0 +1,39 @@
+name: Local Repository Implementation
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+        types: [opened, reopened]
+
+jobs:
+  check-requirements:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.x
+
+    - name: Install dependencies
+      run: python -m pip install -r requirements.txt
+
+    - name: Github Action - pip-version-control
+      run: |
+        python src/main.py \
+          --token "${{ secrets.REPO_ACCESS }}" \
+          --repo "${{ github.repository }}" \
+          --pull_number "${{ github.event.pull_request.number }}" \
+          --commit_sha "${{ github.sha }}" \
+          --upgrade "True" \
+          --downgrade "True" \
+          --new_package "True" \
+          --additional_text "Text generated from pip_version_control action" 
+
+        

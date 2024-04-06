@@ -1,0 +1,48 @@
+name: User Choice Action
+description: Ask the user for actions to trigger and whether to add text on a commit
+inputs:
+  upgrade:
+    description: 'Trigger an upgrade?'
+    required: true
+    default: 'True'
+
+  downgrade:
+    description: 'Trigger a downgrade?'
+    required: true
+    default: 'True'
+
+  new_package:
+    description: 'Trigger when adding a new package?'
+    required: true
+    default: 'True'
+
+  additional_text:
+    description: 'add text to github merge request'
+    default: 'text coming from pip_version_control action.yml'
+
+runs:
+  using: "composite"
+  steps:
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.x
+
+    - name: Install dependencies
+      run: python -m pip install -r requirements.txt
+      shell: bash
+
+    - name: Github Action
+      run: |
+        python src/main.py \
+          --token "${{ secrets.REPO_ACCESS }}" \
+          --repo "${{ github.repository }}" \
+          --pull_number "${{ github.event.pull_request.number }}" \
+          --commit_sha "${{ github.sha }}" \
+          --upgrade "${{ inputs.upgrade }}" \
+          --downgrade "${{ inputs.downgrade }}" \
+          --new_package "${{ inputs.new_package }}" \
+          --commit_number "${{ github.sha }}" \
+          --additional_text "${{ inputs.additional_text }}"
+      shell: bash
