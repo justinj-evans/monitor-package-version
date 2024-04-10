@@ -23,29 +23,24 @@ def download_requirements_to_json(repo, path):
             if '==' in line:
                 package, version = line.strip("\ufeff").strip("\r").split("==")
                 existing_requirements[package] = version
-        print(existing_requirements)
+        print(f'Existing requirements: {existing_requirements}')
+        return existing_requirements
 
     except requests.exceptions.RequestException as e:
         print(f"Error fetching data: {e}")
 
 def check_requirements(existing_requirements):
-    # Existing requirements loaded in
+    # Repository Requirements (access on github github)
     
-    # Generate new requirements dynamically and put them into a dictionary
+    # Committed Requirements (local)
     new_requirements = {}
-    for pkg in pkg_resources.working_set:
-        if isinstance(pkg, str):
-            # This case occurs if pkg_resources.working_set returns strings
-            pkg_parts = pkg.split(" ")
-            if len(pkg_parts) == 2:
-                package_name, package_version = pkg_parts
-                new_requirements[package_name] = package_version
-            else:
-                # Handle unexpected format
-                print(f"Unexpected format for package: {pkg}")
-        else:
-            # Otherwise, pkg is an object with key and version attributes
-            new_requirements[pkg.key] = pkg.version
+    with open("requirements.txt", "r", encoding='UTF-16') as f:
+        for line in f:
+            package, version = line.strip().split("==")
+            new_requirements[package] = version
+    
+    # Logging
+    print(f'New requirements: {new_requirements}')
 
     # Compare dictionaries to find new packages or updated versions
     new_packages = {pkg: version for pkg, version in new_requirements.items() if pkg not in existing_requirements}
@@ -121,7 +116,9 @@ def format_requirements_as_text(user_input: json, data: json):
 # testing usage
 if __name__ == "__main__":
 
-    requirements_comparison = check_requirements()
+    existing_requirements = {'aiohttp': '3.9.3', 'aiosignal': '1.3.1', 'async-timeout': '4.0.3', 'setuptools': '69.1.0'}
+
+    requirements_comparison = check_requirements(existing_requirements)
     user_input = {
     'new_packages': True,
     'upgraded_package': False,
