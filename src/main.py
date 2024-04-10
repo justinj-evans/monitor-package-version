@@ -1,5 +1,5 @@
 from github_interaction import add_text_to_commit, parse_args
-from requirements import check_requirements, format_requirements_as_text
+from requirements import check_requirements, format_requirements_as_text, download_requirements_to_json
 
 def user_notification():
 
@@ -15,11 +15,14 @@ def user_notification():
             'downgraded_package': args.downgrade
             }
     
+        # extract existing requirements
+        existing_requirements = download_requirements_to_json(repo=args.repo, path="requirements.txt")
+
         # compare user's requirements.txt with current package usage
-        requirements = check_requirements()
+        compare_requirements = check_requirements(existing_requirements)
 
         # based on user input, adjust formatted text
-        requirements_text = format_requirements_as_text(user_input=user_input, data=requirements)
+        requirements_text = format_requirements_as_text(user_input=user_input, data=compare_requirements)
 
         # add formatted requirement check to commit message
         add_text_to_commit(token=args.token, repo_name=args.repo,

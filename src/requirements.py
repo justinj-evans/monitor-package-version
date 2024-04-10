@@ -1,16 +1,36 @@
 import pkg_resources
 from packages import compare_versions
 import json
+import requests
+import base64
 
-def check_requirements():
+def download_requirements_to_json(repo, path):
+    base_url = f"https://api.github.com/repos/{repo}/contents/{path}"
+    try:
+        response = requests.get(base_url)
+        response.raise_for_status()  # Raise an exception for unsuccessful requests
+        data = response.json()
+        content = data.get('content', '')
+        
+        # Decode base64 content
+        decoded_content = base64.b64decode(content).decode('utf-8')
 
-    # Load existing requirements.txt into a dictionary
-    existing_requirements = {}
-    with open("requirements.txt", "r", encoding='UTF-16') as f:
-        for line in f:
-            package, version = line.strip().split("==")
-            existing_requirements[package] = version
+        # Split requirements by lines and convert to JSON format
+        requirements_list = decoded_content.split('\n')
 
+        existing_requirements = {}
+        for line in requirements_list:
+            if '==' in line:
+                package, version = line.strip("\ufeff").strip("\r").split("==")
+                existing_requirements[package] = version
+        print(existing_requirements)
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching data: {e}")
+
+def check_requirements(existing_requirements):
+    # Existing requirements loaded in
+    
     # Generate new requirements dynamically and put them into a dictionary
     new_requirements = {}
     for pkg in pkg_resources.working_set:
