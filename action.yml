@@ -1,24 +1,20 @@
-name: User Choice Action
-description: Ask the user for actions to trigger and whether to add text on a commit
+name: monitor-package-version
+description: User selection of package monitoring decisions.
 inputs:
   upgrade:
-    description: 'Trigger an upgrade?'
+    description: 'Monitor package upgrades?'
     required: true
     default: 'True'
 
   downgrade:
-    description: 'Trigger a downgrade?'
+    description: 'Monitor package downgrades?'
     required: true
     default: 'True'
 
   new_package:
-    description: 'Trigger when adding a new package?'
+    description: 'Monitor when a new packages has been added?'
     required: true
     default: 'True'
-
-  additional_text:
-    description: 'add text to github merge request'
-    default: 'text coming from pip_version_control action.yml'
 
 runs:
   using: "composite"
@@ -39,10 +35,9 @@ runs:
           --token "${{ secrets.REPO_ACCESS }}" \
           --repo "${{ github.repository }}" \
           --pull_number "${{ github.event.pull_request.number }}" \
-          --commit_sha "${{ github.sha }}" \
+          --commit_sha "${{ github.event.before }}" \
           --upgrade "${{ inputs.upgrade }}" \
           --downgrade "${{ inputs.downgrade }}" \
           --new_package "${{ inputs.new_package }}" \
           --commit_number "${{ github.sha }}" \
-          --additional_text "${{ inputs.additional_text }}"
       shell: bash

@@ -30,7 +30,7 @@ jobs:
           --token "${{ secrets.REPO_ACCESS }}" \
           --repo "${{ github.repository }}" \
           --pull_number "${{ github.event.pull_request.number }}" \
-          --commit_sha "${{ github.sha }}" \
+          --commit_sha "${{ github.event.before }}" \
           --upgrade "True" \
           --downgrade "True" \
           --new_package "True" \
