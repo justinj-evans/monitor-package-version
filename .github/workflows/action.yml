@@ -3,7 +3,7 @@ name: Local Repository Implementation
 on:
   push:
     branches:
-      - main
+      - '*'
 
   pull_request:
         types: [opened, reopened]
