@@ -35,7 +35,7 @@ runs:
           --token "${{ secrets.REPO_ACCESS }}" \
           --repo "${{ github.repository }}" \
           --pull_number "${{ github.event.pull_request.number }}" \
-          --commit_sha "${{ github.event.before }}" \
+          --commit_sha "${{ github.sha }}" \
           --existing_sha "${{ github.event.before }}" \
           --upgrade "${{ inputs.upgrade }}" \
           --downgrade "${{ inputs.downgrade }}" \
