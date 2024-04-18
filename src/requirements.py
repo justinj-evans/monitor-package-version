@@ -4,8 +4,8 @@ import json
 import requests
 import base64
 
-def download_requirements_to_json(repo, path):
-    base_url = f"https://api.github.com/repos/{repo}/contents/{path}"
+def download_requirements_to_json(repo:str, commit:str, path:str):
+    base_url = f"https://api.github.com/repos/{repo}/contents/{path}?ref={commit}"
     try:
         response = requests.get(base_url)
         response.raise_for_status()  # Raise an exception for unsuccessful requests
@@ -18,29 +18,18 @@ def download_requirements_to_json(repo, path):
         # Split requirements by lines and convert to JSON format
         requirements_list = decoded_content.split('\n')
 
-        existing_requirements = {}
+        requirements = {}
         for line in requirements_list:
             if '==' in line:
                 package, version = line.strip("\ufeff").strip("\r").split("==")
-                existing_requirements[package] = version
-        print(f'Existing requirements: {existing_requirements}')
-        return existing_requirements
+                requirements[package] = version
+        print(f'SHA: {commit} - Requirements: {requirements}')
+        return requirements
 
     except requests.exceptions.RequestException as e:
         print(f"Error fetching data: {e}")
 
-def check_requirements(existing_requirements):
-    # Repository Requirements (access on github github)
-    
-    # Committed Requirements (local)
-    new_requirements = {}
-    with open("requirements.txt", "r", encoding='UTF-16') as f:
-        for line in f:
-            package, version = line.strip().split("==")
-            new_requirements[package] = version
-    
-    # Logging
-    print(f'New requirements: {new_requirements}')
+def check_requirements(new_requirements:dict, existing_requirements:dict):
 
     # Compare dictionaries to find new packages or updated versions
     new_packages = {pkg: version for pkg, version in new_requirements.items() if pkg not in existing_requirements}
