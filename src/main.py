@@ -16,10 +16,11 @@ def user_notification():
             }
     
         # extract existing requirements
-        existing_requirements = download_requirements_to_json(repo=args.repo, path="requirements.txt")
+        existing_requirements = download_requirements_to_json(repo=args.repo, commit=args.existing_sha, path="requirements.txt")
+        new_requirements = download_requirements_to_json(repo=args.repo, commit=args.commit_sha, path="requirements.txt")
 
         # compare user's requirements.txt with current package usage
-        compare_requirements = check_requirements(existing_requirements)
+        compare_requirements = check_requirements(existing_requirements=existing_requirements, new_requirements=new_requirements)
 
         # based on user input, adjust formatted text
         requirements_text = format_requirements_as_text(user_input=user_input, data=compare_requirements)

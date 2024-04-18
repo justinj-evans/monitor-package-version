@@ -36,6 +36,7 @@ runs:
           --repo "${{ github.repository }}" \
           --pull_number "${{ github.event.pull_request.number }}" \
           --commit_sha "${{ github.event.before }}" \
+          --existing_sha "${{ github.event.before }}" \
           --upgrade "${{ inputs.upgrade }}" \
           --downgrade "${{ inputs.downgrade }}" \
           --new_package "${{ inputs.new_package }}" \
