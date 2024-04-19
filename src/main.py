@@ -15,11 +15,11 @@ def user_notification():
             'downgraded_package': args.downgrade
             }
     
-        # extract existing requirements
+        # extract requirements
         existing_requirements = download_requirements_to_json(repo=args.repo, commit=args.existing_sha, path="requirements.txt")
         new_requirements = download_requirements_to_json(repo=args.repo, commit=args.commit_sha, path="requirements.txt")
 
-        # compare user's requirements.txt with current package usage
+        # compare user's committed requirements from previous commit
         compare_requirements = check_requirements(existing_requirements=existing_requirements, new_requirements=new_requirements)
 
         # based on user input, adjust formatted text

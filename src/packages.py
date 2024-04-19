@@ -46,9 +46,6 @@ def compare_versions(old_version, new_version):
 
 # testing usage
 if __name__ == "__main__":
-    # package_name = "setuptools"
-    # upgrade_package(package_name)
-    # downgrade_package(package_name)
 
-    result = compare_versions(old_version='1.26.3',new_version='1.26.2')
+    result = compare_versions(old_version='1.3.1',new_version='1.3.2')
     print(result)
