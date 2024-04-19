@@ -27,8 +27,8 @@ def user_notification():
 
         user_input = {
             'new_packages': args.new_package,
-            'upgraded_package': args.upgrade,
-            'downgraded_package': args.downgrade
+            'upgraded_packages': args.upgrade,
+            'downgraded_packages': args.downgrade
             }
     
         # extract requirements
