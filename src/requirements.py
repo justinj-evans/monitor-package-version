@@ -40,8 +40,8 @@ def check_requirements(existing_requirements:dict, new_requirements:dict, ):
 
     outputs = {
         "new_packages": new_packages,
-        "upgraded_package": upgraded_package,
-        "downgraded_package": downgraded_package
+        "upgraded_packages": upgraded_package,
+        "downgraded_packages": downgraded_package
     }
 
     return outputs
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     # synthetic requirements
     existing_requirements = {'aiohttp': '3.9.3', 'aiosignal': '1.3.1', 'async-timeout': '4.0.3', 'setuptools': '69.1.0'}
     new_requirements = {'aiohttp': '3.9.3', 'aiosignal': '1.3.2', 'async-timeout': '4.0.2', 'setuptools': '69.1.0', 'pandas': '1.0.0'}
-    user_input = {'new_packages': True,'upgraded_package': True,'downgraded_package': True}
+    user_input = {'new_packages': True,'upgraded_packages': True,'downgraded_packages': True}
 
     requirements_comparison = check_requirements(existing_requirements=existing_requirements,new_requirements=new_requirements)
     requirements_text = format_requirements_as_text(data=requirements_comparison,user_input=user_input)

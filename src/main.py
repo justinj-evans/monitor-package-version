@@ -12,7 +12,6 @@ def parse_args():
     parser.add_argument('--upgrade', type=bool, help='Whether to upgrade')
     parser.add_argument('--downgrade', type=bool, help='Whether to downgrade')
     parser.add_argument('--new_package', type=bool, help='Whether it is a new package')
-    parser.add_argument('--additional_text', type=str, help='Additional text')
     args = parser.parse_args()
     return args
 
