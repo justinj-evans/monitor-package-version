@@ -1,34 +1,23 @@
-from packages import compare_versions
+from packaging import version
 import json
-import requests
-import base64
 
-def download_requirements_to_json(repo:str, commit:str, path:str):
-    base_url = f"https://api.github.com/repos/{repo}/contents/{path}?ref={commit}"
-    try:
-        response = requests.get(base_url)
-        response.raise_for_status()  # Raise an exception for unsuccessful requests
-        data = response.json()
-        content = data.get('content', '')
-        
-        # Decode base64 content
-        decoded_content = base64.b64decode(content).decode('utf-8')
+def compare_package_versions(old_version, new_version):
+    if version.parse(new_version) > version.parse(old_version):
+        return "Upgraded"
+    elif version.parse(new_version) < version.parse(old_version):
+        return "Downgraded"
+    else:
+        return "No-change"
 
-        # Split requirements by lines and convert to JSON format
-        requirements_list = decoded_content.split('\n')
+def check_requirements(existing_requirements:dict, new_requirements:dict, ):
+    """
+    Args:
+        new_requirements (dict): commited SHA requirements.txt in dict form
+        existing_requirements (dict): existing SHA requirements.txt in dict form
 
-        requirements = {}
-        for line in requirements_list:
-            if '==' in line:
-                package, version = line.strip("\ufeff").strip("\r").split("==")
-                requirements[package] = version
-        print(f'SHA: {commit} - Requirements: {requirements}')
-        return requirements
-
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching data: {e}")
-
-def check_requirements(new_requirements:dict, existing_requirements:dict):
+    Returns:
+        outputs (dict): categorized requirements.txt diff 
+    """
 
     # Compare dictionaries to find new packages or updated versions
     new_packages = {pkg: version for pkg, version in new_requirements.items() if pkg not in existing_requirements}
@@ -41,7 +30,7 @@ def check_requirements(new_requirements:dict, existing_requirements:dict):
     if updated_packages:
         for package, version in updated_packages.items():
             print(f"Updated Package: {package}: {existing_requirements[package]} -> {version}\n")
-            version_value = compare_versions(existing_requirements[package],version)
+            version_value = compare_package_versions(existing_requirements[package],version)
 
             # add to exported dictionaries 
             if version_value == 'Upgraded':
@@ -57,22 +46,14 @@ def check_requirements(new_requirements:dict, existing_requirements:dict):
 
     return outputs
 
-
-def format_requirements_as_text(user_input: json, data: json):
+def format_requirements_as_text(data: json, user_input: json, ):
     """
-    Expected format:
+    Args:
+        data (json): categorized requirements diff 
+        user_input (json): user decision on how to report on requirements diff
 
-    data = {
-        "new_packages": new_packages,
-        "upgraded_package": updated_packages,
-        "downgraded_package": downgraded_package
-    }
-
-    user_input = {
-    'new_packages': True,
-    'upgraded_package': False,
-    'downgraded_package': True
-    }
+    Returns:
+        output_text (str): formatted text to comment in Github.
     """
 
     outputs = []
@@ -96,19 +77,25 @@ def format_requirements_as_text(user_input: json, data: json):
 
     # Join all text blocks into a single string
     output_text = '\n'.join(outputs)
-    print(f'Formatted outputs:\n\n{output_text}')
-    return output_text
 
-# testing usage
+    # only add output message if differences found
+    if output_text == standard_text:
+            return ""
+    else:
+        print(f'Formatted outputs:\n\n{output_text}')
+        return output_text
+
 if __name__ == "__main__":
 
+    # synthetic versions
+    # result = compare_versions(old_version='1.3.1',new_version='1.2.0')
+    # print(result)
+
+    # synthetic requirements
     existing_requirements = {'aiohttp': '3.9.3', 'aiosignal': '1.3.1', 'async-timeout': '4.0.3', 'setuptools': '69.1.0'}
     new_requirements = {'aiohttp': '3.9.3', 'aiosignal': '1.3.2', 'async-timeout': '4.0.2', 'setuptools': '69.1.0', 'pandas': '1.0.0'}
+    user_input = {'new_packages': True,'upgraded_package': True,'downgraded_package': True}
 
     requirements_comparison = check_requirements(existing_requirements=existing_requirements,new_requirements=new_requirements)
-    user_input = {
-    'new_packages': True,
-    'upgraded_package': True,
-    'downgraded_package': True
-    }
-    format_requirements_as_text(user_input,requirements_comparison)
+    requirements_text = format_requirements_as_text(data=requirements_comparison,user_input=user_input)
+

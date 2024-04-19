@@ -1,7 +1,24 @@
-from github_interaction import add_text_to_commit, parse_args
-from requirements import check_requirements, format_requirements_as_text, download_requirements_to_json
+from github_interaction import add_text_to_commit, download_requirements_to_json
+from requirements import check_requirements, format_requirements_as_text
+import argparse
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='action.yml arguments')
+    parser.add_argument('--token', type=str, help='GitHub token')
+    parser.add_argument('--repo', type=str, help='Repository name')
+    parser.add_argument('--pull_number', type=str, help='Pull request number')
+    parser.add_argument('--commit_sha', type=str, help='Commit SHA')
+    parser.add_argument('--existing_sha', type=str, help='Existing SHA')
+    parser.add_argument('--upgrade', type=bool, help='Whether to upgrade')
+    parser.add_argument('--downgrade', type=bool, help='Whether to downgrade')
+    parser.add_argument('--new_package', type=bool, help='Whether it is a new package')
+    parser.add_argument('--additional_text', type=str, help='Additional text')
+    args = parser.parse_args()
+    return args
 
 def user_notification():
+    """Main driver of Github Action
+    """
 
     # get user input passed by args
     args = parse_args()
@@ -25,9 +42,13 @@ def user_notification():
         # based on user input, adjust formatted text
         requirements_text = format_requirements_as_text(user_input=user_input, data=compare_requirements)
 
-        # add formatted requirement check to commit message
-        add_text_to_commit(token=args.token, repo_name=args.repo,
-                        commit_sha=args.commit_sha, additional_text=requirements_text)
+        # only add commit if diff found and message formatted
+        if requirements_text:
+            # add formatted requirement check to commit message
+            add_text_to_commit(token=args.token, repo_name=args.repo,
+                            commit_sha=args.commit_sha, additional_text=requirements_text)
+        else:
+            print("Github Action 'Monitor Package Version' found no new, upgraded, or downgraded pacakges")
 
 if __name__ == "__main__":
 

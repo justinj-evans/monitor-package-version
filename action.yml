@@ -40,5 +40,4 @@ runs:
           --upgrade "${{ inputs.upgrade }}" \
           --downgrade "${{ inputs.downgrade }}" \
           --new_package "${{ inputs.new_package }}" \
-          --commit_number "${{ github.sha }}" \
       shell: bash
