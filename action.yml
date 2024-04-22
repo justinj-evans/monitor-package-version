@@ -1,6 +1,6 @@
 name: monitor-package-version
 author: Justin Evans
-description: User selection of package monitoring decisions.
+description: Monitor changes to requirements.txt file and comment differences in Github.
 branding:
     icon: "monitor"
     color: "Green"
@@ -20,6 +20,11 @@ inputs:
     required: true
     default: 'True'
 
+  token:
+    description: 'GitHub personal access token with repo access'
+    required: true
+    default: '${{ secrets.SuperSecret }}'
+
 runs:
   using: "composite"
   steps:
@@ -36,7 +41,7 @@ runs:
     - name: monitor-package-version
       run: |
         python src/main.py \
-          --token "${{ secrets.REPO_ACCESS }}" \
+          --token "${{ inputs.token }}" \
           --repo "${{ github.repository }}" \
           --pull_number "${{ github.event.pull_request.number }}" \
           --commit_sha "${{ github.sha }}" \
