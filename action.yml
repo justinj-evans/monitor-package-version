@@ -1,6 +1,9 @@
 name: monitor-package-version
 author: Justin Evans
 description: User selection of package monitoring decisions.
+branding:
+    icon: "monitor"
+    color: "Green"
 inputs:
   upgrade:
     description: 'Monitor package upgrades?'
