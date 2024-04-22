@@ -23,7 +23,7 @@ inputs:
   token:
     description: 'GitHub personal access token with repo access'
     required: true
-    default: '${{ secrets.SuperSecret }}'
+    default: 'Token'
 
 runs:
   using: "composite"
