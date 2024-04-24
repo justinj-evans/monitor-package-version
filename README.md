@@ -26,6 +26,11 @@ jobs:
           upgrade: "True"
           downgrade: "True"
           new_package: "True"
+          token: "${{ secrets.REPO_ACCESS }}"
+          repository: "${{ github.repository }}"
+          commit_sha: "${{ github.sha }}"
+          existing_sha: "${{ github.event.before }}"
+
 
 ```
 
