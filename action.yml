@@ -26,29 +26,13 @@ inputs:
     default: 'Token'
 
 runs:
-  using: "composite"
-  steps:
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.X
-
-    - uses: actions/checkout@master
-
-    - name: Install dependencies
-      run: python -m pip install -r requirements.txt
-      shell: bash
-
-    - name: monitor-package-version
-      run: |
-        python src/main.py \
-          --token "${{ inputs.token }}" \
-          --repo "${{ github.repository }}" \
-          --pull_number "${{ github.event.pull_request.number }}" \
-          --commit_sha "${{ github.sha }}" \
-          --existing_sha "${{ github.event.before }}" \
-          --upgrade "${{ inputs.upgrade }}" \
-          --downgrade "${{ inputs.downgrade }}" \
-          --new_package "${{ inputs.new_package }}" \
-      shell: bash
+  using: docker
+  image: Dockerfile
+  args:
+    - ${{ inputs.upgrade }}
+    - ${{ inputs.downgrade }}
+    - ${{ inputs.new_package }}
+    - ${{ inputs.token }}
+    - ${{ github.repository }}
+    - ${{ github.sha }}
+    - ${{ github.event.before }}
