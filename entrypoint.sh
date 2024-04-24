@@ -15,10 +15,10 @@ ls -l
 
 # Print out specific folders
 echo "Contents of the app directory:"
-ls -l app/
+ls -l /
 
 # Run python main file
-python app/src/main.py \
+python src/main.py \
     --upgrade "$1" \
     --downgrade "$2" \
     --new_package "$3"\
