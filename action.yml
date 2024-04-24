@@ -25,6 +25,21 @@ inputs:
     required: true
     default: 'Token'
 
+  repository:
+    description: 'GitHub derived repository name'
+    required: true
+    default: ${{ github.repository }}
+
+  commit_sha:
+    description: 'GitHub derived SHA on commit'
+    required: true
+    default: ${{ github.sha }}
+
+  existing_sha:
+    description: 'GitHub derived SHA before commit'
+    required: true
+    default: ${{ github.event.before }}
+
 runs:
   using: docker
   image: Dockerfile
@@ -33,6 +48,6 @@ runs:
     - ${{ inputs.downgrade }}
     - ${{ inputs.new_package }}
     - ${{ inputs.token }}
-    - ${{ github.repository }}
-    - ${{ github.sha }}
-    - ${{ github.event.before }}
+    - ${{ inputs.repository }}
+    - ${{ input.sha }}
+    - ${{ inputs.existing_sha }}
