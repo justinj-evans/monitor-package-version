@@ -1,3 +1,4 @@
+#!/bin/sh -l
 
 # Parameters
 # - ${{ inputs.upgrade }}
