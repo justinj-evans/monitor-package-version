@@ -6,4 +6,4 @@ RUN pip install -r requirements.txt
 COPY entrypoint.sh /entrypoint.sh
 
 #CMD ["python", "/app/main.py"]
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["sh","/entrypoint.sh"]
