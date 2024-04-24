@@ -8,4 +8,4 @@ COPY . /app
 # COPY entrypoint.sh /app
 #CMD ["python", "/app/main.py"]
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["app/entrypoint.sh"]
