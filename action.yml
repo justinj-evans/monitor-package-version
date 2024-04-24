@@ -23,7 +23,7 @@ inputs:
   token:
     description: 'GitHub personal access token with repo access'
     required: true
-    default: "${{ secrets.REPO_ACCESS }}"
+    default: "Token"
 
   repository:
     description: 'GitHub derived repository name'
