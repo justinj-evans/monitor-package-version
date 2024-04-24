@@ -27,12 +27,12 @@ jobs:
     - name: monitor-package-version
       run: |
         python src/main.py \
-          --token "${{ secrets.REPO_ACCESS }}" \
-          --repo "${{ github.repository }}" \
-          --pull_number "${{ github.event.pull_request.number }}" \
-          --commit_sha "${{ github.sha }}" \
-          --existing_sha "${{ github.event.before }}" \
           --upgrade "True" \
           --downgrade "True" \
           --new_package "True" \
-        
+          --token "${{ secrets.REPO_ACCESS }}" \
+          --repo "${{ github.repository }}" \
+          --commit_sha "${{ github.sha }}" \
+          --existing_sha "${{ github.event.before }}" \
+          --pull_number "${{ github.event.pull_request.number }}" \
+          
