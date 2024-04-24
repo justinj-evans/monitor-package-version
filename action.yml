@@ -49,5 +49,5 @@ runs:
     - ${{ inputs.new_package }}
     - ${{ inputs.token }}
     - ${{ inputs.repository }}
-    - ${{ inputs.sha }}
+    - ${{ inputs.commit_sha }}
     - ${{ inputs.existing_sha }}
