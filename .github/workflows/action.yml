@@ -1,4 +1,4 @@
-name: local monitor-package-version
+name: Local-Test
 
 on:
   push:

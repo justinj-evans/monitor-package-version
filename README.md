@@ -1,4 +1,7 @@
 # monitor-package-version
+![Docker](https://github.com/justinj-evans/monitor-package-version/actions/workflows/docker.yml/badge.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/justinj-evans/monitor-package-version/blob/master/LICENSE)
+
 
 Do you maintain a collaborative repository and want to keep a light-weight package list? 
 
@@ -21,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: monitor-package-version
-      - uses: justinj-evans/monitor-package-version@v1
+      - uses: justinj-evans/monitor-package-version@v1.0.2
         with:
           upgrade: "True"
           downgrade: "True"
@@ -43,7 +46,7 @@ The Github Action compares current packages in your repository with those on a c
 ![](docs/sample_output.PNG)
 
 ## Contributors
-Contributions of any kind welcome!
+Contributions of any kind welcome.
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/justinj-evans/monitor-package-version/blob/main/LICENSE) file for details.
