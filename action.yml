@@ -1,6 +1,6 @@
 name: monitor-package-version
 author: Justin Evans
-description: Monitor changes to requirements.txt file and comment differences in Github.
+description: Monitor repository requirements and comment on commits in Github.
 branding:
     icon: "monitor"
     color: "Green"
