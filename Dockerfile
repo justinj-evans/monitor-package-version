@@ -3,8 +3,16 @@ FROM python:3.8-slim
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-COPY entrypoint.sh /app/
-COPY ./src /app/
+WORKDIR /app
 
-#CMD ["python", "/app/main.py"]
+# Create a directory called src in the container
+RUN mkdir src
+
+# Copy the contents of the local src directory into the src directory in the container
+COPY entrypoint.sh /app/
+COPY src /app/src
+
+# Set the entrypoint script to be executable
+RUN chmod +x /app/entrypoint.sh
+
 ENTRYPOINT ["sh","/app/entrypoint.sh"]
