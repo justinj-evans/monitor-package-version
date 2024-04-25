@@ -14,8 +14,8 @@ echo "Contents of the current directory:"
 ls -l
 
 # Print out specific folders
-# echo "Contents of the app directory:"
-# ls -l /
+echo "Contents of the app directory:"
+ls -l /
 
 # Run python main file
 python /app/src/main.py \

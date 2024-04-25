@@ -6,7 +6,7 @@ RUN pip install -r requirements.txt
 WORKDIR /app
 
 # Create a directory called src in the container
-RUN mkdir src
+RUN mkdir app
 
 # Copy the contents of the local src directory into the src directory in the container
 COPY entrypoint.sh /app/
