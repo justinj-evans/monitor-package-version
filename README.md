@@ -1,6 +1,7 @@
 # monitor-package-version
 ![Docker](https://github.com/justinj-evans/monitor-package-version/actions/workflows/docker.yml/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/justinj-evans/monitor-package-version/blob/master/LICENSE)
+[![HitCount](https://hits.dwyl.com/justinj-evans/monitor-package-version.svg?style=flat)](http://hits.dwyl.com/justinj-evans/monitor-package-version)
 
 
 Do you maintain a collaborative repository and want to keep a light-weight package list? 
