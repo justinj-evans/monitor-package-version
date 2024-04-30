@@ -32,7 +32,9 @@ jobs:
           --new_package "True" \
           --token "${{ secrets.REPO_ACCESS }}" \
           --repo "${{ github.repository }}" \
-          --commit_sha "${{ github.sha }}" \
           --existing_sha "${{ github.event.before }}" \
+          --commit_sha "${{ github.sha }}" \
           --pull_number "${{ github.event.pull_request.number }}" \
+          --pull_request_base_sha "${{ inputs.pull_request_base_sha }}" \
+          --pull_request_head_sha "${{ inputs.pull_request_head_sha }}" \
           

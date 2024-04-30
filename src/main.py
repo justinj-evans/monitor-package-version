@@ -39,8 +39,12 @@ def user_notification():
             print("Github Commit SHA not present, specify as ${{ github.sha }} in action.yml")
             sys.exit()
 
-        # assume github action triggered on commit or pull request
+        if args.existing_sha == "0000000000000000000000000000000000000000":
+            print("Github Action unable to make comparison on first commit in feature branch. See StackOverflow: 61860732")
+            sys.exit()
+
         # extract requirements
+        # assume github action triggered on commit or pull request
         if args.commit_sha:
             existing_requirements = download_requirements_to_json(repo=args.repo, commit=args.existing_sha, path="requirements.txt")
             new_requirements = download_requirements_to_json(repo=args.repo, commit=args.commit_sha, path="requirements.txt")
