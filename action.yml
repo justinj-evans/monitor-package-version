@@ -30,15 +30,30 @@ inputs:
     required: true
     default: ${{ github.repository }}
 
-  commit_sha:
-    description: 'GitHub derived SHA on commit'
-    required: true
-    default: ${{ github.sha }}
-
   existing_sha:
     description: 'GitHub derived SHA before commit'
-    required: true
+    required: false
     default: ${{ github.event.before }}
+
+  commit_sha:
+    description: 'GitHub derived SHA on commit'
+    required: false
+    default: ${{ github.sha }}
+
+  pull_number:
+    description: 'Github derived pull request number'
+    required: false
+    default: "${{ github.event.pull_request.number }}"
+
+  pull_request_base_sha:
+    description: 'Latest commit on the base/main branch of the pull request'
+    required: false
+    default: "${{ github.event.pull_request.base.sha }}"
+
+  pull_request_head_sha:
+    description: 'Latest commit on the feature branch of the pull request'
+    required: false
+    default: "${{ github.event.pull_request.head.sha }}"
 
 runs:
   using: docker
@@ -49,5 +64,8 @@ runs:
     - ${{ inputs.new_package }}
     - ${{ inputs.token }}
     - ${{ inputs.repository }}
-    - ${{ inputs.commit_sha }}
     - ${{ inputs.existing_sha }}
+    - ${{ inputs.commit_sha }}
+    - ${{ inputs.pull_number }}
+    - ${{ inputs.pull_request_base_sha }}
+    - ${{ inputs.pull_request_head_sha }}
