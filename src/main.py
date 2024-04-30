@@ -1,17 +1,18 @@
 from github_interaction import add_text_to_commit, download_requirements_to_json
 from requirements import check_requirements, format_requirements_as_text
 import argparse
+import sys
 
 def parse_args():
     parser = argparse.ArgumentParser(description='action.yml arguments')
     parser.add_argument('--token', type=str, help='GitHub token')
     parser.add_argument('--repo', type=str, help='Repository name')
-    parser.add_argument('--pull_number', type=str, help='Pull request number')
-    parser.add_argument('--commit_sha', type=str, help='Commit SHA')
-    parser.add_argument('--existing_sha', type=str, help='Existing SHA')
     parser.add_argument('--upgrade', type=bool, help='Whether to upgrade')
     parser.add_argument('--downgrade', type=bool, help='Whether to downgrade')
     parser.add_argument('--new_package', type=bool, help='Whether it is a new package')
+    parser.add_argument('--existing_sha', type=str, help='Existing SHA')
+    parser.add_argument('--commit_sha', type=str, help='Commit SHA')
+    parser.add_argument('--pull_number', type=str, help='Pull request number')
     args = parser.parse_args()
     return args
 
@@ -31,6 +32,11 @@ def user_notification():
             'downgraded_packages': args.downgrade
             }
     
+        # validate presence of commit
+        if not args.commit_sha:
+            print("Github Commit SHA not present, specify as ${{ github.sha }} in action.yml")
+            sys.exit()
+
         # extract requirements
         existing_requirements = download_requirements_to_json(repo=args.repo, commit=args.existing_sha, path="requirements.txt")
         new_requirements = download_requirements_to_json(repo=args.repo, commit=args.commit_sha, path="requirements.txt")
