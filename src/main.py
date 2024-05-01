@@ -39,6 +39,7 @@ def user_notification():
             print("Github Commit SHA not present, specify as ${{ github.sha }} in action.yml")
             sys.exit()
 
+        # validate whether it is the first commit in feature branch
         if args.existing_sha == "0000000000000000000000000000000000000000":
             print("Github Action unable to make comparison on first commit in feature branch. See StackOverflow: 61860732")
             sys.exit()
