@@ -46,10 +46,11 @@ def user_notification():
 
         # extract requirements
         # assume github action triggered on commit or pull request
-        if args.commit_sha:
+        # if pull request is present, default to running comparison using pull_request_base_sha, pull_request_head_sha
+        if args.commit_sha and not args.pull_number:
             existing_requirements = download_requirements_to_json(repo=args.repo, commit=args.existing_sha, path="requirements.txt")
             new_requirements = download_requirements_to_json(repo=args.repo, commit=args.commit_sha, path="requirements.txt")
-            
+    
         if args.pull_number:
             existing_requirements = download_requirements_to_json(repo=args.repo, commit=args.pull_request_base_sha, path="requirements.txt")
             new_requirements = download_requirements_to_json(repo=args.repo, commit=args.pull_request_head_sha, path="requirements.txt")
