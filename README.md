@@ -18,32 +18,37 @@ This GitHub Action assists in monitoring repository requirements by commenting w
 *.github/workflows/monitor-package-version.yml*
 ```yaml
 name: Sample Format
-on: push
+on: pull_request
 
 jobs:
   monitor-package-version:
     runs-on: ubuntu-latest
     steps:
       - name: monitor-package-version
-      - uses: justinj-evans/monitor-package-version@v1.0.2
+      - uses: justinj-evans/monitor-package-version@v1.1.2
         with:
           upgrade: "True"
           downgrade: "True"
           new_package: "True"
           token: "${{ secrets.REPO_ACCESS }}"
           repository: "${{ github.repository }}"
-          commit_sha: "${{ github.sha }}"
-          existing_sha: "${{ github.event.before }}"
+          pull_number: "${{ github.event.pull_request.number }}"
+          pull_request_base_sha: "${{ github.event.pull_request.base.sha }}"
+          pull_request_head_sha: "${{ github.event.pull_request.head.sha }}"
 
 ```
 
 ## Inputs
+Action can be set up to run on:
+- pull requests: using 'on: pull_request' with the inputs: pull_number, pull_request_base_sha, pull_request_head_sha
+- commits: using 'on: push' and the inputs: commit_sha, existing_sha
+
 Checkout [`action.yml`](https://github.com/justinj-evans/monitor-package-version/blob/main/action.yml) for a full list of supported inputs.
 
 ## Outputs
-The Github Action compares current packages in your repository with those on a commit. If a difference is found, the Github Action generates a response and comments on the commit.
+The Github Action compares current packages in your repository with those committed in feature branch. If a difference is found, the Github Action generates a response and comments on the pull request.
 
-![](docs/sample_output.PNG)
+![](docs/sample_output_pull_request.PNG)
 
 ## Contributors
 Contributions of any kind welcome.
