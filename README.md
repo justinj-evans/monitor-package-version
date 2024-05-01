@@ -35,7 +35,6 @@ jobs:
           commit_sha: "${{ github.sha }}"
           existing_sha: "${{ github.event.before }}"
 
-
 ```
 
 ## Inputs

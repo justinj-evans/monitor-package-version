@@ -32,5 +32,5 @@ python /app/src/main.py \
     --commit_sha "$7" \
     --pull_number "$8" \
     --pull_request_base_sha "$9" \
-    --pull_request_head_sha "$10" \
+    --pull_request_head_sha "${10}" \
 
