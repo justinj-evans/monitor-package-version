@@ -38,12 +38,11 @@ def download_requirements_to_json(repo:str, commit:str, path:str):
     except requests.exceptions.RequestException as e:
         print(f"Error fetching data: {e}")
 
-def add_text_to_merge_request(token, owner, repo_name, pull_number, additional_text):
+def add_text_to_pull_request(token, repo_name, pull_number, additional_text):
     github = Github(token)
     repo = github.get_repo(f"{repo_name}")
     pull_request = repo.get_pull(pull_number)
-    new_description = f"{pull_request.body}\n\n## Additional Information\n\n{additional_text}"
-    pull_request.edit(body=new_description)
+    pull_request.create_issue_comment(additional_text)
 
 def add_text_to_commit(token, repo_name, commit_sha, additional_text):
     github = Github(token)

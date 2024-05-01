@@ -1,4 +1,4 @@
-from github_interaction import add_text_to_commit, download_requirements_to_json
+from github_interaction import add_text_to_commit, add_text_to_pull_request, download_requirements_to_json
 from requirements import check_requirements, format_requirements_as_text
 import argparse
 import sys
@@ -13,6 +13,8 @@ def parse_args():
     parser.add_argument('--existing_sha', type=str, help='Existing SHA')
     parser.add_argument('--commit_sha', type=str, help='Commit SHA')
     parser.add_argument('--pull_number', type=str, help='Pull request number')
+    parser.add_argument('--pull_request_base_sha', type=str, help='Latest commit on the base/main branch of the pull request')
+    parser.add_argument('--pull_request_head_sha', type=str, help='Latest commit on the base/main branch of the pull request')
     args = parser.parse_args()
     return args
 
@@ -37,9 +39,21 @@ def user_notification():
             print("Github Commit SHA not present, specify as ${{ github.sha }} in action.yml")
             sys.exit()
 
+        # validate whether it is the first commit in feature branch
+        if args.existing_sha == "0000000000000000000000000000000000000000":
+            print("Github Action unable to make comparison on first commit in feature branch. See StackOverflow: 61860732")
+            sys.exit()
+
         # extract requirements
-        existing_requirements = download_requirements_to_json(repo=args.repo, commit=args.existing_sha, path="requirements.txt")
-        new_requirements = download_requirements_to_json(repo=args.repo, commit=args.commit_sha, path="requirements.txt")
+        # assume github action triggered on commit or pull request
+        # if pull request is present, default to running comparison using pull_request_base_sha, pull_request_head_sha
+        if args.commit_sha and not args.pull_number:
+            existing_requirements = download_requirements_to_json(repo=args.repo, commit=args.existing_sha, path="requirements.txt")
+            new_requirements = download_requirements_to_json(repo=args.repo, commit=args.commit_sha, path="requirements.txt")
+    
+        if args.pull_number:
+            existing_requirements = download_requirements_to_json(repo=args.repo, commit=args.pull_request_base_sha, path="requirements.txt")
+            new_requirements = download_requirements_to_json(repo=args.repo, commit=args.pull_request_head_sha, path="requirements.txt")
 
         # compare user's committed requirements from previous commit
         compare_requirements = check_requirements(existing_requirements=existing_requirements, new_requirements=new_requirements)
@@ -49,9 +63,17 @@ def user_notification():
 
         # only add commit if diff found and message formatted
         if requirements_text:
+
+            # assume github action triggered on commit or pull request
             # add formatted requirement check to commit message
-            add_text_to_commit(token=args.token, repo_name=args.repo,
-                            commit_sha=args.commit_sha, additional_text=requirements_text)
+            if args.commit_sha:
+                add_text_to_commit(token=args.token, repo_name=args.repo,
+                                commit_sha=args.commit_sha, additional_text=requirements_text)
+            # add formatted requirement check to pull request commit message
+            if args.pull_number:
+                add_text_to_pull_request(token=args.token, repo_name=args.repo, 
+                                          pull_number=args.pull_number, additional_text=requirements_text)
+
         else:
             print("Github Action 'Monitor Package Version' found no new, upgraded, or downgraded pacakges")
 
