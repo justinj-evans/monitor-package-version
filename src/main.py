@@ -72,7 +72,7 @@ def user_notification():
             # add formatted requirement check to pull request commit message
             if args.pull_number:
                 add_text_to_pull_request(token=args.token, repo_name=args.repo, 
-                                          pull_number=args.pull_number, additional_text=requirements_text)
+                                          pull_number=int(args.pull_number), additional_text=requirements_text)
 
         else:
             print("Github Action 'Monitor Package Version' found no new, upgraded, or downgraded pacakges")
